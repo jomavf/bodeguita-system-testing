@@ -11,23 +11,23 @@ const editProductSuccess = require('./edit-product-success');
     let chrome = 'chrome';
     let firefox = 'firefox';
 
-    await loginNotSuccess(chrome,time);
-    await loginNotSuccess(firefox,time);
+    // await loginNotSuccess(chrome,time);
+    // await loginNotSuccess(firefox,time);
 
-    await loginSuccess(chrome,time);
-    await loginSuccess(firefox,time);
+    // await loginSuccess(chrome,time);
+    // await loginSuccess(firefox,time);
 
-    await createProductNotSuccess(chrome,time);
-    await createProductNotSuccess(firefox,time);
+    await createProductNotSuccess(chrome,time); //done
+    // await createProductNotSuccess(firefox,time);
 
-    await createProductSuccess(chrome,time);
-    await createProductSuccess(firefox,time);
+    await createProductSuccess(chrome,time); //done
+    // await createProductSuccess(firefox,time);
 
-    await editProductNotSuccess(chrome,time);
-    await editProductNotSuccess(firefox,time);
+    // await editProductNotSuccess(chrome,time);
+    // await editProductNotSuccess(firefox,time);
 
-    await editProductSuccess(chrome,time);
-    await editProductSuccess(firefox,time);
+    // await editProductSuccess(chrome,time);
+    // await editProductSuccess(firefox,time);
 
-    await deleteProductSuccess(chrome,time);
+    // await deleteProductSuccess(chrome,time);
 })();
