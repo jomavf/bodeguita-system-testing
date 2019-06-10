@@ -1,52 +1,33 @@
-const {Builder, By, Key, until} = require('selenium-webdriver');
-const assert = require('assert');
+const loginSuccess = require('./login-success')
+const loginNotSuccess = require('./login-not-success')
+const createProductSuccess = require('./create-product-success')
+const createProductNotSuccess = require('./create-product-not-success');
+const deleteProductSuccess = require('./delete-product-success');
+const editProductNotSuccess = require('./edit-product-not-success');
+const editProductSuccess = require('./edit-product-success');
 
+(async function main() {
+    let time = 350;
+    let chrome = 'chrome';
+    let firefox = 'firefox';
 
-(async function example() {
-    let broswer = 'firefox'
-    let code = 'usuario1x'
+    await loginNotSuccess(chrome,time);
+    await loginNotSuccess(firefox,time);
 
-    let name = 'test'
-    let quantity = 123
-    let price = 10
-    let type = 'type'
-    let discount = 'discount'
-    let nationality = 'nationality'
-    let message = 'Añadido exitosamente'
+    await loginSuccess(chrome,time);
+    await loginSuccess(firefox,time);
 
+    await createProductNotSuccess(chrome,time);
+    await createProductNotSuccess(firefox,time);
 
-    let password = 'clave1x'
-  let driver = await new Builder().forBrowser(broswer).build();
-  try {
-    await driver.get('http://localhost:3000/');
-    await driver.sleep(2000)
-    await driver.findElement(By.id('code')).sendKeys(code);
-    await driver.sleep(2000)
-    await driver.findElement(By.id('password')).sendKeys(password);
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="save"]')).click();
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="products"]')).click();
+    await createProductSuccess(chrome,time);
+    await createProductSuccess(firefox,time);
 
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/input[1]')).sendKeys(name);
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/input[2]')).sendKeys(quantity);
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/input[3]')).sendKeys(price);
-    // await driver.sleep(2000)
-    // await driver.findElement(By.id('type')).sendKeys(type);
-    // await driver.sleep(2000)
-    // await driver.findElement(By.id('discount')).sendKeys(discount);
-    // await driver.sleep(2000)
-    // await driver.findElement(By.id('nationality')).sendKeys(nationality);
-    await driver.sleep(2000)
-    await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/button')).click();
-    await driver.sleep(2000)
-    let result = await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/span')).getText();
-    await driver.sleep(2000)
-    assert.equal(message,result)
-  } finally {
-      console.log('YA esta ya')
-  }
+    await editProductNotSuccess(chrome,time);
+    await editProductNotSuccess(firefox,time);
+
+    await editProductSuccess(chrome,time);
+    await editProductSuccess(firefox,time);
+
+    await deleteProductSuccess(chrome,time);
 })();
