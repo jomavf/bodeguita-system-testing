@@ -1,3 +1,7 @@
+const { Builder } = require('selenium-webdriver');
+const fs = require('fs')
+const uuidv1 = require('uuid/v1');
+
 const loginSuccess = require('./login-success')
 const loginNotSuccess = require('./login-not-success')
 const createProductSuccess = require('./create-product-success')
@@ -9,38 +13,57 @@ const deleteProductNotSuccess = require('./delete-product-not-success');
 const listProductNotSuccess = require('./list-product-not-success');
 const listProductSuccess = require('./list-product-success');
 
+const SingleDriver = require('./utils/singleDriver');
+
 (async function main() {
     let time = 150;
-    let chrome = 'chrome';
-    let firefox = 'firefox';
+    let url = 'http://localhost:3000'
 
-    await loginNotSuccess(chrome,time);
-    await loginNotSuccess(firefox,time);
-
-    await loginSuccess(chrome,time);
-    await loginSuccess(firefox,time);
+    let chrome_driver = await new Builder().forBrowser('chrome').build();
     
-    await createProductNotSuccess(chrome,time);
-    await createProductNotSuccess(firefox,time);
+		try {
 
-    await createProductSuccess(chrome,time);
-    await createProductSuccess(firefox,time);
+      await loginNotSuccess(chrome_driver,time,url);
+			await loginSuccess(chrome_driver,time,url);
+      await createProductNotSuccess(chrome_driver,time,url);
+      await createProductSuccess(chrome_driver,time,url);
+      await listProductSuccess(chrome_driver,time,url);
+      await listProductNotSuccess(chrome_driver,time,url);
+      await editProductNotSuccess(chrome_driver,time,url);
+      await editProductSuccess(chrome_driver,time,url);
+      await deleteProductNotSuccess(chrome_driver,time,url);
+      await deleteProductSuccess(chrome_driver,time,url);
 
-    await listProductSuccess(chrome,time);
-    await listProductSuccess(firefox,time);
-
-    await listProductNotSuccess(chrome,time);
-    await listProductNotSuccess(firefox,time);
-
-    await editProductNotSuccess(chrome,time);
-    await editProductNotSuccess(firefox,time);
-
-    await editProductSuccess(chrome,time);
-    await editProductSuccess(firefox,time);
+		} catch (error) {
+			let base64Image = await chrome_driver.takeScreenshot() // image in base64
+			fs.writeFile(`./images-error/${uuidv1()}.png`, base64Image, {encoding: 'base64'}, function(err) {
+				console.log('File created');
+			});
+		} finally {
+			await chrome_driver.quit()
+    }
     
-    await deleteProductNotSuccess(chrome,time); //done
-    await deleteProductNotSuccess(firefox,time); //done
+    let firefox_driver = await new Builder().forBrowser('firefox').build();
+    try {
 
-    await deleteProductSuccess(chrome,time); //done
-    await deleteProductSuccess(firefox,time); //done
+      await loginNotSuccess(firefox_driver,time,url);
+      await loginSuccess(firefox_driver,time,url);
+      await createProductNotSuccess(firefox_driver,time,url);
+      await createProductSuccess(firefox_driver,time,url);
+      await listProductSuccess(firefox_driver,time,url);
+      await listProductNotSuccess(firefox_driver,time,url);
+      await editProductNotSuccess(firefox_driver,time,url);
+      await editProductSuccess(firefox_driver,time,url);
+      await deleteProductNotSuccess(firefox_driver,time,url); //done
+      await deleteProductSuccess(firefox_driver,time,url); //done
+
+		} catch (error) {
+			let base64Image = await firefox_driver.takeScreenshot() // image in base64
+			fs.writeFile(`./images-error/${uuidv1()}.png`, base64Image, {encoding: 'base64'}, function(err) {
+				console.log('File created');
+			});
+		} finally {
+			await firefox_driver.quit()
+    }  
+
 })();

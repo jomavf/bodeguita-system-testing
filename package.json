@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "selenium-webdriver": "^4.0.0-alpha.1",
+    "uuid": "^3.3.2",
     "xlsx": "^0.14.3"
   }
 }
