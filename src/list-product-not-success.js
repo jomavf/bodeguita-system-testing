@@ -2,12 +2,16 @@
 const assert = require('assert');
 
 let listProductSuccess = async function listProductSuccess( driver,time,url) {
-	let code = 'usuario1x'
-	let password = 'clave1x'
-	let message = 'Seleccione un producto porfavor'
-	let paraBuscar = "Galleta Casino coco"
+	let file = await XLSX.readFile("./src/data/BuscarProductoData.xlsx")
+    let sheet = file.Sheets['Hoja1']
 
-	await driver.get(url);
+	let localURL = sheet.B3.v
+    let code = sheet.C3.v
+    let password = sheet.D3.v
+    let paraBuscar = sheet.E3.v
+	let result = sheet.F3.v
+
+	await driver.get(url || localURL);
 	await driver.sleep(time)
 	await driver.findElement(By.id('code')).sendKeys(code);
 	await driver.sleep(time)
@@ -21,6 +25,6 @@ let listProductSuccess = async function listProductSuccess( driver,time,url) {
 	await driver.sleep(time)
 	let size = await driver.findElements(By.xpath('//*[@id="root"]/main/div/ul/li'))
 	await driver.sleep(time)
-	assert.equal(true,size.length === 0 ? true : false)
+	assert.equal(true,size.length === result ? true : false)
 };
 module.exports = listProductSuccess

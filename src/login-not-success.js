@@ -2,11 +2,15 @@
 const assert = require('assert');
 
 let loginNotSuccess = async function loginNotSuccess(driver,time,url) {
-    let code = 'datos'
-    let password = 'incorrectos'
-    let message = "Datos inválidos"
+    let file = await XLSX.readFile("./src/data/IniciarSesionData.xlsx")
+    let sheet = file.Sheets['Hoja1']
+
+    let localURL = sheet.B3.v
+    let code = sheet.C3.v
+    let password = sheet.D3.v
+    let message = sheet.E3.v
     
-    await driver.get(url);
+    await driver.get(url || localURL);
     await driver.sleep(time)
     await driver.findElement(By.id('code')).sendKeys(code);
     await driver.sleep(time)

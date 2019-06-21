@@ -2,12 +2,17 @@
 const assert = require('assert');
 
 let listProductSuccess = async function listProductSuccess( driver,time,url) {
-    let code = 'usuario1x'
-    let password = 'clave1x'
-    let message = 'Seleccione un producto porfavor'
-    let paraBuscar = "Galleta Casino Clásica"
 
-    await driver.get(url);
+    let file = await XLSX.readFile("./src/data/BuscarProductoData.xlsx")
+    let sheet = file.Sheets['Hoja1']
+
+    let localURL = sheet.B2.v
+    let code = sheet.C2.v
+    let password = sheet.D2.v
+    let paraBuscar = sheet.E2.v
+    let result = sheet.F2.v
+
+    await driver.get(url || localURL);
     await driver.sleep(time)
     await driver.findElement(By.id('code')).sendKeys(code);
     await driver.sleep(time)
@@ -21,6 +26,7 @@ let listProductSuccess = async function listProductSuccess( driver,time,url) {
     await driver.sleep(time)
     let size = await driver.findElements(By.xpath('//*[@id="root"]/main/div/ul/li'))
     await driver.sleep(time)
-    assert.equal(true,size.length > 0 ? true : false)
+    // Aqui se verifica si es que existe mas de 0 etiquetas <li>
+    assert.equal(true,size.length >= result ? true : false)
 };
 module.exports = listProductSuccess

@@ -2,11 +2,15 @@ const { By } = require('selenium-webdriver');
 const assert = require('assert');
 
 let loginSuccess = async function loginSuccess(driver,time,url) {
-    let code = 'usuario1x'
-	let password = 'clave1x'
-	let message = "Bienvenido a bodeguita"
+    let file = await XLSX.readFile("./src/data/IniciarSesionData.xlsx")
+    let sheet = file.Sheets['Hoja1']
+
+    let localURL = sheet.B2.v
+    let code = sheet.C2.v
+    let password = sheet.D2.v
+    let message = sheet.E2.v
 	
-	await driver.get(url);
+	await driver.get(url || localURL);
 	await driver.sleep(time)
 	await driver.findElement(By.id('code')).sendKeys(code);
 	await driver.sleep(time)

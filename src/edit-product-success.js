@@ -2,17 +2,21 @@
 const assert = require('assert');
 
 let editProductSuccess = async function editProductSuccess(driver,time,url) {
-    let code = 'usuario1x'
-    let password = 'clave1x'
-    let name = 'Hola mundo'
-    let quantity = 100
-    let price = 69
-    // let type = 'type'
-    // let discount = 'discount'
-    // let nationality = 'nationality'
-    let message = 'Listado de productos'
+    let file = await XLSX.readFile("./src/data/EditarProductoData.xlsx")
+    let sheet = file.Sheets['Hoja1']
+
+    let localURL = sheet.B2.v  
+    let code = sheet.C2.v
+    let password = sheet.D2.v
+    let name = sheet.E2.v
+    let quantity = sheet.F2.v
+    let price = sheet.G2.v
+    let type = sheet.H2.v
+    let nationality = sheet.I2.v
+    let discount = sheet.J2.v
+    let message = sheet.K2.v
      
-    await driver.get(url);
+    await driver.get(url || localURL);
     await driver.sleep(time)
     await driver.findElement(By.id('code')).sendKeys(code);
     await driver.sleep(time)
@@ -38,10 +42,30 @@ let editProductSuccess = async function editProductSuccess(driver,time,url) {
     await driver.sleep(time)
     await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/input[3]')).sendKeys(price);
 
+    // Combobox
+    await driver.sleep(time)
+    let cmbs = await driver.findElements(By.name('newProductType'));
+    for (let i = 0; i < cmbs.length; i++) {
+      let text = await cmbs[i].getAttribute('value')
+      text === type && await cmbs[i].click()
+    }
+    
+    // Checkbox
+    await driver.sleep(time)
+    discount === 'Si' && await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/input[4]')).click();
+
+    //Radio button
+    await driver.sleep(time)
+    let radios = await driver.findElements(By.name('nationality'))
+    for (let i = 0; i < radios.length; i++) {
+      let text = await radios[i].getAttribute('value')
+      text === nationality && await radios[i].click()
+    }
+
     await driver.sleep(time)
     await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/button')).click();
     await driver.sleep(time)
-    let result = await driver.findElement(By.xpath('//*[@id="root"]/main/div/h1')).getText();
+    let result = await driver.findElement(By.xpath('//*[@id="root"]/main/div/form/span[4]')).getText();
     await driver.sleep(time)
     assert.equal(message,result)
 };
